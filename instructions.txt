@@ -1,0 +1,140 @@
+1. Introduction 
+    Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications. APIs.
+
+    official website 
+        https://expressjs.com/
+
+    official documentation 
+        https://expressjs.com/en/starter/installing.html
+
+2. Installation 
+    npm install express --save
+
+3. Hello world App 
+    npm init 
+    npm install express --save
+    npm i --save-dev nodemon 
+        or 
+    npm i -D nodemon
+
+        const express = require('express')
+        const app = express()
+        const port = 3000
+
+        app.get('/', (req, res) => {
+            res.send('Hello World!')
+        })
+
+        app.listen(port, () => {
+            console.log(`App listening at http://localhost:${port}`)
+        })
+
+note => some useful extension for test api's in vs code => thunder client 
+chrome extension => json formattor => is useful for json parsed showing in chrome 
+
+4. Serve Html File and JSON in express 
+
+    app.get('/htmlPage', (req, res) => {
+        res.sendFile(path.join(__dirname, 'fileName.html'));
+        res.status(200);
+    })
+
+    app.get('/json', (req, res) => {
+        res.json({name : 'maria', profession : 'developer'})
+    })
+
+5. Static Folder Serve or Basic Routing 
+Serving static files in Express
+
+    create folder 
+        public/index.html 
+    
+    express Middleware 
+        app.use(express.static(path.join(__dirname, 'public')));
+
+        app.get('/about', (req, res) => {
+            res.sendFile(path.join(__dirname, 'public/about.html'))
+        })
+
+6. Creating Own Middlewares 
+    const myMiddleWare = (req, res, next) => {
+        console.log(req); next();
+    }
+    app.use(myMiddleWare);
+
+    note=> Better to use Built in Middlewares 
+
+7. Routing Parameters  / Query String 
+    
+    app.get('/user/:id', (req, res) => {
+        res.send('User Id is' + " " + req.params.id);   
+    })
+
+8. Creating simple blog app iniside blog-app folder 
+
+1.========= Routing separate ==========
+    create separara routes for routing 
+    create folder routes/blog.js 
+
+        const express = require('express');
+        const router = express.Router();
+        const path = require('path');
+
+        router.get('/', (req, res) => {
+            res.sendFile(path.join(__dirname, '../templates/index.html'))
+        })
+
+        module.exports = router;
+
+    use this route inside index.js 
+        app.use('/',require(path.join(__dirname, 'routes/blog.js')));
+
+2.============= Express Handlebars =================
+                TEmplate Engines or Handlebars 
+
+    Npm package 
+        https://www.npmjs.com/package/express-handlebars
+    
+    Github Repo
+        https://github.com/express-handlebars/express-handlebars
+
+Basic Directors Structure 
+
+├── app.js
+└── views
+    ├── home.handlebars
+    └── layouts
+        └── main.handlebars
+
+sample code 
+    import express from 'express';
+    import { engine } from 'express-handlebars';
+
+    const app = express();
+
+    app.engine('handlebars', engine());
+    app.set('view engine', 'handlebars');
+    app.set('views', './views');
+
+    app.get('/', (req, res) => {
+        res.render('home');
+    });
+
+    app.listen(3000);
+
+Sample Html ccode 
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>Example App</title>
+    </head>
+    <body>
+
+        {{{body}}}
+
+    </body>
+    </html>
+
+==============================================================================================
